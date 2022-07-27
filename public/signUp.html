@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/bootstrap-5.2.0-beta1-dist/css/bootstrap.css">
+</head>
+<body>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-sm-11 col-md-8 mx-auto shadow p-5">
+                <h4 class="display-6 text-center text-success">Create your Strip Account</h4>
+                <label for="nameInp">Full&nbsp;Name</label>
+                <input type="text" placeholder="Full Name" class="form-control my-2" id="nameInp">
+                <label for="nameInp">E-mail</label>
+                <input type="text" placeholder="Email" class="form-control mt-2" id="emailInp">
+                <label for="nameInp">Full&nbsp;Name</label>
+                <input type="number" placeholder="Phone Number" class="form-control mt-2" id="noInp">
+                <label for="nameInp">Password</label>
+                <input type="password" placeholder="Password" class="form-control mt-2" id="passInp">
+                <button id="signUpBtn" class="btn btn-dark w-100 mt-2" >Create Account</button>
+
+                <i class="">Have &nbsp;an&nbsp;account&nbsp;? <a href="index.html" class="text-decoration-none">Sign in</a></i>
+            </div>
+            <div id="response"></div>           
+        </div>
+    </div>
+
+    
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.9.1/firebase-app.js";
+        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/9.9.1/firebase-database.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.9.1/firebase-auth.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+      
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+        apiKey: "AIzaSyBLkEJmc0ptxW5G4mHXAZrU6fpuqMKJY1M",
+        authDomain: "level-2-project-66a2d.firebaseapp.com",
+        projectId: "level-2-project-66a2d",
+        storageBucket: "level-2-project-66a2d.appspot.com",
+        messagingSenderId: "505285968745",
+        appId: "1:505285968745:web:58b84688dc923c892533f8"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase();
+        const auth  = getAuth()
+
+        let userArray = [];
+        let user_id = 0;
+        let dbRef = ref(db, "users");
+        onValue(dbRef, function(snapshot){
+            userArray = snapshot.val();
+            if(userArray){
+                user_id = userArray.length;
+            } else {
+                user_id = 0
+            }
+        })
+
+        document.getElementById("signUpBtn").addEventListener("click", function(){
+            createUserWithEmailAndPassword(auth,emailInp.value,passInp.value).then((credentials)=>{
+                let user = {fullname: nameInp.value,phone_no:noInp.value,email:emailInp.value,uid:credentials.user.uid}
+                let userRef = ref(db, `users/${user_id}`)
+                set(userRef, user)
+                window.location = "admin.html"
+            }).catch((error)=>{
+                response.innerHTML = `<div class="alert alert-danger">${error.message}</div>`
+            })
+        })
+      </script>
+</body>
+</html>

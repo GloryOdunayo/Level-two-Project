@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Welcome to Firebase Hosting</title>
+    <link rel="stylesheet" href="/bootstrap-5.2.0-beta1-dist/css/bootstrap.css">
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <h6 class="display-4 text-center">Sign In</h6>
+        <input type="text" placeholder="Email" class="form-control mt-2" id="emailInp">
+        <input type="password" placeholder="Password" class="form-control mt-2" id="passInp">
+        <button class="btn btn-dark w-100 mt-3" id="signInBtn">Signin</button><br>
+        <button class="btn btn-dark w-100 mt-3" id="signInG">Sign in with Google</button><br>
+        <i>Don't have an account? <a href="signUp.html" class="text-decoration-none">Sign Up</a></i>
+        <div id="response"></div>
+      </div>
+    </div>
+    <script type="module">
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-app.js";
+      import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-database.js";
+      import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-auth.js";
+      // TODO: Add SDKs for Firebase products that you want to use
+      // https://firebase.google.com/docs/web/setup#available-libraries 
+      // Your web app's Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyBLkEJmc0ptxW5G4mHXAZrU6fpuqMKJY1M",
+        authDomain: "level-2-project-66a2d.firebaseapp.com",
+        projectId: "level-2-project-66a2d",
+        storageBucket: "level-2-project-66a2d.appspot.com",
+        messagingSenderId: "505285968745",
+        appId: "1:505285968745:web:58b84688dc923c892533f8"
+      };
+    
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const db = getDatabase();
+      const auth = getAuth();
+      const provider = new GoogleAuthProvider();
+
+      document.getElementById("signInBtn").addEventListener("click", function() {
+        let email = emailInp.value;
+        let password = passInp.value;
+
+        signInWithEmailAndPassword(auth, email, password)
+        .then((credentials) => {
+          window.location = "admin.html";
+        }).catch((error) =>{
+          response.innerHTML = `<div class="alert alert-danger">${error.message}</div>`;
+        })
+      })
+
+      document.getElementById("signInG").addEventListener("click", function (){
+        signInWithPopup(auth, provider).then((credentials) => {
+          console.log(credentials);
+        }).catch((error) => {
+          console.log(error);
+      })
+    })
+  </script>
+  </body>
+</html>
