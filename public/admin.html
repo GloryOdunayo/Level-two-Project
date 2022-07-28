@@ -12,17 +12,17 @@
         <div class="row">
             <a href="#" class="text-muted float-end" id="sign-out">Log Out</a>
             <div class="col-6 mx-auto shadow p-5">
-                <input type="text" placeholder="Todo name" class="form-control" id="todoInp">
-                <input type="text" placeholder="Todo name" class="form-control" id="todoInp1">
-                <input type="text" placeholder="Todo name" class="form-control" id="todoInp2">
+                <input type="text" placeholder="Product name" class="form-control" id="todoInp">
+                <input type="text" placeholder="Price" class="form-control" id="todoInp2">
+                <input type="text" placeholder="Discount" class="form-control" id="todoInp3">
                 <input type="file" class="form-control mt-2" id="fileInp">
+                <input type="number" placeholder="Quantity Available" class="form-control" id="quantity">
 
-                <button class="btn btn-dark w-100 mt-3" id="todoBtn">Add</button>
+                <button class="btn btn-dark w-100 mt-4" id="todoBtn">Add</button>
 
-                <div id="loader" class="bg-warning display-6 text-center"></div>
-
-                <div id="allTodo"></div>
+                <div id="loader" class="bg-warning display-6 text-center"></div>              
             </div>
+            <div id="allTodo" class="row container"></div>
         </div>
     </div>
 
@@ -79,7 +79,7 @@
         
 
         document.getElementById("todoBtn").addEventListener("click", function(){
-            let todo = {pname:todoInp.value,price:todoInp2.value,Discount:todoInp3.value}
+            let todo = {pname:todoInp.value,price:todoInp2.value,Discount:todoInp3.value, Q_Available: quantity.value}
             let files = fileInp.files[0];
             let fileName = files.name;
             let date = new Date();
@@ -95,7 +95,9 @@
                 let bytesTransferred = snapshot.bytesTransferred;
                 let progress = Math.round((bytesTransferred/totalBytes) * 100);
 
-                loader.innerHTML = `${progress}%`;
+                loader.innerHTML = `<div class="progress">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: ${progress}%"><span style="font-size: 20px;float:right;" class="px-2">${progress}%</span></div>
+                </div>`;
             }, function (error) {
                 loader.innerHTML = `${error}%`
             }, function () {
@@ -107,6 +109,7 @@
             todoInp.value = "";
             todoInp2.value = "";
             todoInp3.value = "";
+            fileInp.value = "";
         })
 
         function displayTodo (todoArray) {
@@ -114,15 +117,13 @@
             userTodo.map((todo, i) => {
                 let imgRef = stRef(storage, `images/${todo.img_name}`);
                 getDownloadURL(imgRef).then((url) => {
-                    allTodo.innerHTML += `<div class="col-12 col-md-5 card shadow mx-md-3 mb-3 p-2">
-                        <img src="${url}" style="height: 60%; object-fit: cover; border-radius:6px 6px 0 0;">
-                        <span style="font-size: 20px;" class="px-2">${todo.todo.pname}
-                            <span style="font-size: 20px;float:right;" class="px-2">$ ${todo.todo.price}</span>
-                        </span>
-                        <span style="font-size: 20px;" class="px-2"><i class="text-muted" style="font-size: 10px;">${todo.time}</i>
-                            <span style="font-size: 20px;float:right;" class="px-2">-${todo.todo.Discount}%</span>
-                        </span>
-                        <button class="btn btn-dark my-2" style="border-radius:0 0 6px 6px;" id="${i}">Delete</button>
+                    allTodo.innerHTML += `<div class="col-sm-12 col-lg-3 col-md-5 card shadow mx-md-3 mt-4 mb-3 p-2">
+                        <img src="${url}" style="height: 70%; object-fit: cover; border-radius:6px 6px 0 0;">
+                        <span style="font-size: 20px;" class="px-2">${todo.todo.pname}</span>
+                        <span style="font-size: 20px;" class="px-2">$ ${todo.todo.price}</span>
+                        <span style="font-size: 20px;" class="px-2">Discount: -${todo.todo.Discount}%</span>
+                        <span style="font-size: 20px;" class="px-2"><i class="text-muted" style="font-size: 10px;">${todo.time}</i></span>
+                        <button class="btn btn-dark my-2" style="border-radius:0 0 px 6px;" id="${i}">Delete</button>
                     </div>`
                 })
             })
