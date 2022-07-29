@@ -10,7 +10,7 @@
 <body>
     <div class="container">
         <div class="row">
-            <a href="#" class="text-muted float-end" id="sign-out">Log Out</a>
+            <a href="#" class="text-muted float-end" id="signOut">Log Out</a>
             <div class="col-6 mx-auto shadow p-5">
                 <input type="text" placeholder="Product name" class="form-control" id="todoInp">
                 <input type="text" placeholder="Price" class="form-control" id="todoInp2">
@@ -110,6 +110,7 @@
             todoInp2.value = "";
             todoInp3.value = "";
             fileInp.value = "";
+            quantity.value = "";
         })
 
         function displayTodo (todoArray) {
@@ -117,7 +118,7 @@
             userTodo.map((todo, i) => {
                 let imgRef = stRef(storage, `images/${todo.img_name}`);
                 getDownloadURL(imgRef).then((url) => {
-                    allTodo.innerHTML += `<div class="col-sm-12 col-lg-3 col-md-5 card shadow mx-md-3 mt-4 mb-3 p-2">
+                    allTodo.innerHTML += `<div class="col-sm-12 col-lg-2 col-md-5 card shadow mx-md-3 mt-4 mb-3 p-2">
                         <img src="${url}" style="height: 70%; object-fit: cover; border-radius:6px 6px 0 0;">
                         <span style="font-size: 20px;" class="px-2">${todo.todo.pname}</span>
                         <span style="font-size: 20px;" class="px-2">$ ${todo.todo.price}</span>
@@ -129,7 +130,7 @@
             })
         }
 
-        document.getElementById("sign-out").addEventListener("click", function() {
+        document.getElementById("signOut").addEventListener("click", function() {
             signOut(auth).then((response) => {
                 window.location = "signIn.html";
             }).catch((error) => {
