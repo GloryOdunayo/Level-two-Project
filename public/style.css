@@ -1,0 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Bree+Serif&family=DM+Serif+Display:ital@0;1&family=Mukta:wght@200&family=Ubuntu&display=swap');
+body {
+    margin: 0;
+    padding: 0;
+}
+.text-chocolate-light-5 {
+    font-family: 'Square Peg', cursive;
+}
+#bgimg {
+    background: url(/pictures/2348074870814_status_10eade134e444b23a76d1dd05b457433.jpg);
+    background-size: cover;
+}
+#signUpBtn:hover {
+    color: brown !important;
+}
+#signInG:hover {
+    color: white !important;
+}
+input.form-control:hover {
+    border: 1px solid chocolate;
+}
+button span.arrow {
+    display: none;
+}
+button span.arrow:hover {
+    /* transform: translateX(20px); */
+    display: block;
+}
+.signin:hover {
+    color: brown !important;
+}
