@@ -92,7 +92,7 @@
                 userDetails.email = user.email;
                 userDetails.uid = user.uid;
             } else {
-                window.location = "signUp.html";
+                window.location = "signIn.html";
             }
         })
 
@@ -107,10 +107,7 @@
             } else {
                 todoId = 0;         
             }
-        })
-    
-
-        
+        })  
 
         document.getElementById("todoBtn").addEventListener("click", function(){
             let todo = {pname:todoInp.value,price:todoInp2.value,Discount:todoInp3.value, Q_Available: quantity.value}

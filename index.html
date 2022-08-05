@@ -86,7 +86,6 @@
                     <span class="visually-hidden">Next</span>
                 </button>
             </div>
-            <div id="allTodo" class="row mt-3"></div>
         </div>
         <!-- <div class="row">
             <div class="row mx-auto shadow p-5 border border-danger">
@@ -94,6 +93,7 @@
             </div>
         </div> -->
     </div>
+    <div id="allTodo" class="row mt-3 d-flex justify-content-center"></div>
 
     <footer class="bd-footer py-4 py-md-5 mt-5 bg-light bg-transparent">
         <div class="container py-4 py-md-5 px-4 px-md-3">
@@ -229,20 +229,61 @@
         })
 
         function displayTodo (todoArray) {
-          todoArray.map((todo, i,) => {
-            let imgRef = stRef(storage, `images/${todo.img_name}`);
+          todoArray.map((to, i) => {
+            let imgRef = stRef(storage, `images/${to.img_name}`);
             getDownloadURL(imgRef).then((url) => {
-              allTodo.innerHTML += `<div class="col-lg-3 col-sm-12 col-md-5 card shadow mx-md-4 mb-4 p-2"; border-radius:6px">
+              allTodo.innerHTML += `<div class="col-lg-2 col-sm-12 col-md-5 card shadow mx-md-1 mb-4 p-2"; border-radius:6px">
                 <img src="${url}" class="img-fluid" style="height: 70%;object-fit: cover; border-radius:6px 6px 0 0;">
-                <span style="font-size: 20px;" class="px-2">${todo.todo.pname}</span>
-                <span style="font-size: 20px;float:right;" class="px-2">$ ${todo.todo.price}</span>
-                <span style="font-size: 20px;" class="px-2"><i class="text-muted" style="font-size: 20px;">${todo.todo.Q_Available} Available</i></span>
-                <span style="font-size: 20px;float:right;" class="px-2">-${todo.todo.Discount}% Discount</span>
-                <button class="btn btn-dark my-2" style="border-radius:0 0 6px 6px;" id="cart">Add to cart</button>
+                <span style="font-size: 20px;" class="px-2">${to.todo.pname}</span>
+                <span style="font-size: 20px;float:right;" class="px-2">$ ${to.todo.price}</span>
+                <span style="font-size: 20px;" class="px-2"><i class="text-muted" style="font-size: 20px;">${to.todo.Q_Available} Available</i></span>
+                <span style="font-size: 20px;float:right;" class="px-2">-${to.todo.Discount}% Discount</span>
+                <button class="btn btn-dark my-2" style="border-radius:0 0 6px 6px;" id="cart" onclick="addToCart()">Add to cart</button>
                 </div>`
             })
           })
-        }     
+        }  
+
+        let cart = []
+        let cartId = 0
+        onValue(dbRef, function(snapshot){
+            cart = snapshot.val();
+            if (cart) {
+                cartId = cart.length;
+                addToCart(cart);
+            } else {
+                cartId = 0;         
+            }
+        })
+
+        function addToCart(){
+            if (signInWithEmailAndPassword) {
+                cart.filter((todo,i)=>{
+                    cart.push()
+                })
+            }
+            // cart.filter((todo,i)=>{
+            //     let imgRef = stRef(storage, `images/${todo.img_name}`)
+            //     console.log("Its well");
+            
+            // let userCart = user.filter((each)=> each.email == usersDetail.email);
+            // let fileName = files.name;
+            // let todoObj = {email: userDetails.email, img_name: fileName, todo, time: dat};
+            // let todoRef = ref(db, `todos/${todoId}`);
+            // set(todoRef, todoObj);
+            // allTodo.filter((todo, i) => {
+            //     let imgRef = stRef(storage, `images/${todo.img_name}`);
+            //     alert("Eweee")
+            // })
+            // let user = users.email
+            // if (users.email) {
+            //     alert("Seen")
+            // } else {
+            //     window.location = "signUpUser.html";
+            // } 
+        }  
+        
+        window.addToCart = addToCart
     </script>
     <script src="/bootstrap-5.2.0-beta1-dist/js/bootstrap.min.js"></script>
     <script src="/js/popper.min.js"></script>

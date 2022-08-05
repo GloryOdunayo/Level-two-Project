@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart</title>
+    <link rel="icon" href="pictures/cart_thamb2.jpg">
+</head>
+<body>
+    
+
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-app.js";
+        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-database.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-auth.js";
+        import { getStorage, uploadBytes, ref as stRef, ref as tsRef, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-storage.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+        
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+            apiKey: "AIzaSyBLkEJmc0ptxW5G4mHXAZrU6fpuqMKJY1M",
+            authDomain: "level-2-project-66a2d.firebaseapp.com",
+            projectId: "level-2-project-66a2d",
+            storageBucket: "level-2-project-66a2d.appspot.com",
+            messagingSenderId: "505285968745",
+            appId: "1:505285968745:web:58b84688dc923c892533f8"
+        };
+    
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase();
+        const auth = getAuth();
+        const storage = getStorage();
+
+        let userDetails = {}
+        onAuthStateChanged(auth, (user) =>{
+            if (user) {
+                userDetails.email = user.email;
+                userDetails.uid = user.uid;
+            } else {
+                window.location = "signIn.html";
+            }
+        })
+
+        let dbRef = ref(db, "cart");
+        let cartArray = [];
+        let todoId = 0;
+        onValue(dbRef, function(snapshot){
+            cartArray = snapshot.val();
+            if (cartArray) {
+                todoId = cartArray.length;
+                displayTodo(cartArray);
+            } else {
+                todoId = 0;         
+            }
+        }) 
+        
+        function displayTodo (cartArray) {
+            let userTodo = cartArray.filter((each)=> each.email == userDetails.email);
+            userTodo.map((todo, i) => {
+                let imgRef = tsRef(storage, `images/${todo.img_name}`);
+                getDownloadURL(imgRef).then((url) => {
+                    allTodo.innerHTML += `<div class="col-sm-12 col-lg-2 col-md-5 card shadow mx-md-3 mt-4 mb-3 p-2">
+                        <img src="${url}" style="height: 70%; object-fit: cover; border-radius:6px 6px 0 0;">
+                        <span style="font-size: 20px;" class="px-2">${todo.todo.pname}</span>
+                        <span style="font-size: 20px;" class="px-2">$ ${todo.todo.price}</span>
+                        <span style="font-size: 20px;" class="px-2">Discount: -${todo.todo.Discount}%</span>
+                        <span style="font-size: 20px;" class="px-2"><i class="text-muted" style="font-size: 10px;">${todo.time}</i></span>
+                        <button class="btn btn-dark my-2" style="border-radius:0 0 px 6px;" id="${i}" onclick="del()">Delete</button>
+                    </div>`
+                })
+            })
+        }
+
+        
+        let todo = {pname:todoInp.value,price:todoInp2.value,Discount:todoInp3.value, Q_Available: quantity.value}
+        let files = fileInp.files[0];
+        let fileName = files.name;
+        let date = new Date();
+
+        let todoObj = {email: userDetails.email, img_name: fileName, todo, time: date.toLocaleTimeString()};
+        let todoRef = ref(db, `todos/${todoId}`);
+        set(todoRef, todoObj);
+
+        let imgRef = stRef(storage, `images/${fileName}`);
+        let userTodo = todoArray.filter((each)=> each.email == userDetails.email);
+
+        document.getElementById("signOut").addEventListener("click", function() {
+            signOut(auth).then((response) => {
+                window.location = "signIn.html";
+            }).catch((error) => {
+                console.log(response);
+            })
+        })
+      
+        const del = (index) => {
+            let array = com.filter((item, ind) => index != ind);
+            com = array;
+            for (var i = 0; i < allUsers.length; i++) {
+                if (allUsers[i].email == indUser) {
+                    allUsers[i].notes = com;
+                    console.log(allUsers[i].notes);
+                }
+            }
+            book.innerHTML = "";
+            load()
+            localStorage.Users = JSON.stringify(allUsers);
+        
+        }
+        window.del = del
+    </script>
+
+</body>
+</html>
