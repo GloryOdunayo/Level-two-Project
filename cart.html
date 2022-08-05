@@ -15,7 +15,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-app.js";
         import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-database.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-auth.js";
-        import { getStorage, uploadBytes, ref as stRef, ref as tsRef, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-storage.js";
+        import { getStorage, uploadBytes, ref as stRef, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-storage.js";
         // TODO: Add SDKs for Firebase products that you want to use
         // https://firebase.google.com/docs/web/setup#available-libraries
         
@@ -46,9 +46,12 @@
             }
         })
 
-        let dbRef = ref(db, "cart");
         let cartArray = [];
         let todoId = 0;
+        let dbRef = ref(db, "carts");
+
+        let files = fileInp.files[0];
+        let fileName = files.name;
         onValue(dbRef, function(snapshot){
             cartArray = snapshot.val();
             if (cartArray) {
@@ -58,6 +61,11 @@
                 todoId = 0;         
             }
         }) 
+
+        let imgRef = tsRef(storage, `images/${fileName}`);
+        let todoObj = {email: userDetails.email, img_name: fileName};
+        let todoRef = ref(db, `todos/${todoId}`);
+        set(todoRef, todoObj);
         
         function displayTodo (cartArray) {
             let userTodo = cartArray.filter((each)=> each.email == userDetails.email);
@@ -75,19 +83,6 @@
                 })
             })
         }
-
-        
-        let todo = {pname:todoInp.value,price:todoInp2.value,Discount:todoInp3.value, Q_Available: quantity.value}
-        let files = fileInp.files[0];
-        let fileName = files.name;
-        let date = new Date();
-
-        let todoObj = {email: userDetails.email, img_name: fileName, todo, time: date.toLocaleTimeString()};
-        let todoRef = ref(db, `todos/${todoId}`);
-        set(todoRef, todoObj);
-
-        let imgRef = stRef(storage, `images/${fileName}`);
-        let userTodo = todoArray.filter((each)=> each.email == userDetails.email);
 
         document.getElementById("signOut").addEventListener("click", function() {
             signOut(auth).then((response) => {

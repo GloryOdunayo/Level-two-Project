@@ -87,10 +87,10 @@
         const storage = getStorage();
 
         let userDetails = {}
-        onAuthStateChanged(auth, (user) =>{
-            if (user) {
-                userDetails.email = user.email;
-                userDetails.uid = user.uid;
+        onAuthStateChanged(auth, (admin) =>{
+            if (admin) {
+                userDetails.email = admin.email;
+                userDetails.uid = admin.uid;
             } else {
                 window.location = "signIn.html";
             }
